@@ -1,0 +1,322 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata: 
+  name: postgres
+  labels:
+    serviceType: postgres
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels: 
+        app: postgres
+    spec: 
+      containers: 
+        - name: postgres
+          image: postgres
+          ports:
+          - containerPort: 5432
+          env:
+          - name: POSTGRES_PASSWORD
+            value: password
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_DB
+            value: activitidb
+--- 
+# apiVersion: apps/v1beta1
+# kind: Deployment
+# metadata:
+#   name: activiti-cloud-audit
+#   labels:
+#     app: infrastructure
+#     serviceType: audit
+# spec:
+#   replicas: 1
+#   template:
+#     metadata:
+#       name: activiti-cloud-audit
+#       labels:
+#         app: infrastructure
+#         serviceType: audit
+#     spec:
+#       containers:
+#         - name: activiti-cloud-audit
+#           image: activiti/activiti-cloud-audit:7-201711-EA
+#           readinessProbe:
+#             httpGet:
+#               path: /application/status
+#               port: 8181
+#             initialDelaySeconds: 100
+#             timeoutSeconds: 1
+#             periodSeconds: 15
+#           livenessProbe:
+#             httpGet:
+#               path: /application/status
+#               port: 8181
+#             initialDelaySeconds: 120
+#             timeoutSeconds: 1
+#             periodSeconds: 15
+#           imagePullPolicy: Always
+#           ports:
+#             - containerPort: 8181
+#           env:
+#           - name: ACT_AUDIT_PORT
+#             value: "8181"
+#           - name: ACT_KEYCLOAK_URL
+#             value: "http://activiti-cloud-sso-idm-kub:30081/auth"
+#           - name: ACT_KEYCLOAK_PATTERNS
+#             value: "/v1/*"
+# ---
+# apiVersion: apps/v1beta1
+# kind: Deployment
+# metadata:
+#   name: activiti-cloud-query
+#   labels:
+#     app: infrastructure
+#     serviceType: query
+# spec:
+#   replicas: 1
+#   template:
+#     metadata:
+#       name: activiti-cloud-query
+#       labels:
+#         app: infrastructure
+#         serviceType: query
+#     spec:
+#       containers:
+#         - name: activiti-cloud-query
+#           image: activiti/activiti-cloud-query:7-201711-EA
+#           readinessProbe:
+#             httpGet:
+#               path: /application/status
+#               port: 8182
+#             initialDelaySeconds: 100
+#             timeoutSeconds: 1
+#             periodSeconds: 15
+#           livenessProbe:
+#             httpGet:
+#               path: /application/status
+#               port: 8182
+#             initialDelaySeconds: 120
+#             timeoutSeconds: 1
+#             periodSeconds: 15
+#           imagePullPolicy: Always
+#           ports:
+#             - containerPort: 8182
+#           env:
+#           - name: ACT_QUERY_PORT
+#             value: "8182"
+#           - name: ACT_KEYCLOAK_URL
+#             value: "http://activiti-cloud-sso-idm-kub:30081/auth"
+#           - name: ACT_KEYCLOAK_PATTERNS
+#             value: "/v1/*"
+# ---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: activiti-runtime-bundle-campaign-management
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: activiti-runtime-bundle-campaign-management
+      labels:
+        app: activiti-runtime-bundle-campaign-management
+        serviceType: runtime-bundle
+    spec:
+      containers:
+        - name: activiti-runtime-bundle-campaign-management
+          image: activiti-runtime-bundle-campaign-management:latest
+          readinessProbe:
+            httpGet:
+              path: /application/status
+              port: 8081
+            initialDelaySeconds: 100
+            timeoutSeconds: 1
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /application/status
+              port: 8081
+            initialDelaySeconds: 120
+            timeoutSeconds: 1
+            periodSeconds: 15
+          imagePullPolicy: Never
+          env:
+          - name: ACT_RB_HOST
+            value: activiti-runtime-bundle-campaign-management
+          - name: ACT_RB_APP_NAME
+            value: activiti-runtime-bundle-campaign-management
+          - name: ACT_RB_DB_URI
+            value: jdbc:postgresql://postgres:5432/activitidb
+          - name: ACT_KEYCLOAK_URL
+            value: "http://activiti-cloud-sso-idm-kub:30081/auth"
+          - name: ACT_KEYCLOAK_PATTERNS
+            value: "/v1/*"
+          - name: ACT_EUREKA_URL
+            value: "http://activiti-cloud-registry:8761/eureka/"
+          - name: ACT_RABBITMQ_HOST
+            value: "rabbitmq"
+          - name: ACT_RB_DB_USER
+            value: postgres
+          - name: ACT_RB_DB_PASS
+            value: password
+          - name: ACT_RB_DB_PLATFORM
+            value: "org.hibernate.dialect.PostgreSQLDialect"
+          - name: ACT_RB_EUREKA_CLIENT_ENABLED
+            value: "true"
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: activiti-cloud-connector-sfdc-event-listener
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: activiti-cloud-connector-sfdc-event-listener
+      labels:
+        app: activiti-cloud-connector-sfdc-event-listener
+        serviceType: cloud-connector
+    spec:
+      containers:
+        - name: activiti-cloud-connector-sfdc-event-listener
+          image: activiti-cloud-connector-sfdc-event-listener:latest
+          imagePullPolicy: Never
+          env:
+          - name: ACT_CC_HOST
+            value: activiti-cloud-connector-sfdc-event-listener
+          - name: ACT_CC_PORT
+            value: "8082"
+          - name: ACT_CC_APP_NAME
+            value: "activiti-cloud-connector-sfdc-event-listener"
+          - name: ACT_RABBITMQ_HOST
+            value: "rabbitmq"
+          - name: ACT_SFDC_USER
+            value: "<sfdcusername>"
+          - name: ACT_SFDC_PW
+            value: "<sfdcpw + secret>"
+          - name: ACT_KEYCLOAK_URL
+            value: "http://activiti-cloud-sso-idm-kub:30081/auth"
+          - name: ACT_KEYCLOAK_PATTERNS
+            value: "/*"
+          - name: ACT_EUREKA_URL
+            value: "http://activiti-cloud-registry:8761/eureka/"
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: activiti-cloud-connector-sfdc-rest
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: activiti-cloud-connector-sfdc-rest
+      labels:
+        app: activiti-cloud-connector-sfdc-rest
+        serviceType: cloud-connector
+    spec:
+      containers:
+        - name: activiti-cloud-connector-sfdc-rest
+          image: activiti-cloud-connector-sfdc-rest:latest
+          imagePullPolicy: Never
+          env:
+          - name: ACT_CC_HOST
+            value: activiti-cloud-connector-sfdc-rest
+          - name: ACT_CC_PORT
+            value: "8083"
+          - name: ACT_CC_APP_NAME
+            value: "activiti-cloud-connector-sfdc-rest"
+          - name: ACT_RABBITMQ_HOST
+            value: "rabbitmq"
+          - name: ACT_SFDC_USER
+            value: "<sfdcusername>"
+          - name: ACT_SFDC_PW
+            value: "<sfdcpw + secret>"
+          - name: ACT_SFDC_CLIENT_ID
+            value: "<client_id>"
+          - name: ACT_SFDC_CLIENT_SECRET
+            value: "<client_secret>"
+          - name: ACT_KEYCLOAK_URL
+            value: "http://activiti-cloud-sso-idm-kub:30081/auth"
+          - name: ACT_KEYCLOAK_PATTERNS
+            value: "/*"
+          - name: ACT_EUREKA_URL
+            value: "http://activiti-cloud-registry:8761/eureka/"
+---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: activiti-cloud-audit
+#   namespace: default
+# spec:
+#   selector:
+#     serviceType: audit
+#   ports:
+#     - port: 8181
+#       targetPort: 8181
+#   type: ClusterIP
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: activiti-cloud-query
+#   namespace: default
+# spec:
+#   selector:
+#     serviceType: query
+#   ports:
+#     - port: 8182
+#       targetPort: 8182
+#   type: ClusterIP
+# ---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: postgres
+  namespace: default
+spec: 
+  selector: 
+    app: postgres
+  ports: 
+    - port: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: activiti-runtime-bundle-campaign-management
+  namespace: default
+spec:
+  selector:
+    serviceType: runtime-bundle
+  ports:
+    - port: 8081
+      targetPort: 8081
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: activiti-cloud-connector-sfdc-event-listener
+  namespace: default
+spec:
+  selector:
+    serviceType: cloud-connector
+  ports:
+    - port: 8082
+      targetPort: 8082
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: activiti-cloud-connector-sfdc-rest
+  namespace: default
+spec:
+  selector:
+    serviceType: cloud-connector
+  ports:
+    - port: 8083
+      targetPort: 8083
+  type: ClusterIP

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.activiti.cloud.examples</groupId>
+		<artifactId>sfdc-example</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>activiti-cloud-connector-sfdc-event-listener</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.activiti.cloud</groupId>
+			<artifactId>activiti-cloud-starter-connector</artifactId>
+		</dependency>
+
+		<!-- https://github.com/forcedotcom/EMP-Connector served via https://jitpack.io/ 
+			https://github.com/forcedotcom/EMP-Connector/issues/8 
+			
+			Also, found another connector for events at 
+			https://github.com/cdowney/sf-messaging-client 
+			however emp-connector seems to be the official recommended one in sfdc docs -->
+		<dependency>
+			<groupId>com.github.forcedotcom</groupId>
+			<artifactId>EMP-Connector</artifactId>
+			<version>master-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-stream-binder-rabbit-test-support</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring-boot-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${maven.docker.plugin.version}</version>
+				<configuration>
+					<images>
+						<image>
+							<name>activiti-cloud-connector-sfdc-event-listener</name>
+							<alias>activiti-cloud-connector-sfdc-event-listener</alias>
+							<build>
+								<from>openjdk:alpine</from>
+								<assembly>
+									<descriptorRef>artifact</descriptorRef>
+								</assembly>
+								<cmd>java -jar maven/${project.artifactId}-${project.version}.jar</cmd>
+							</build>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>docker:build</id>
+						<phase>install</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
+</project>

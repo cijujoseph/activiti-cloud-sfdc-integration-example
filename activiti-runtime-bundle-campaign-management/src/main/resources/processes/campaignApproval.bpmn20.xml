@@ -1,0 +1,223 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0en" modeler:exportDateTime="20171208090024102" modeler:modelId="3003" modeler:modelVersion="1" modeler:modelLastUpdated="1512745220433">
+  <process id="campaignApproval" name="Campaign Approval" isExecutable="true">
+    <startEvent id="Start" name="Start">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[startEvent1]]></modeler:editor-resource-id>
+      </extensionElements>
+    </startEvent>
+    <exclusiveGateway id="fixStatusExclusiveGateway" name="Fix Status?" default="sid-946576BF-DDF6-4BA4-81E3-FC8FCE6F012F">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-8A80E332-90CA-4DE6-B95E-62C2F7E28161]]></modeler:editor-resource-id>
+      </extensionElements>
+    </exclusiveGateway>
+    <sequenceFlow id="sid-655703DF-7CC5-4647-8502-81B220648224" sourceRef="Start" targetRef="fixStatusExclusiveGateway">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-655703DF-7CC5-4647-8502-81B220648224]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <serviceTask id="setStatusInactive" name="Set Campaign Inactive and Set Status Null" implementation="Set Campaign Inactive and Set Status Null">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-34A7087D-A503-4E6C-B58D-B0BA9734A15D]]></modeler:editor-resource-id>
+      </extensionElements>
+    </serviceTask>
+    <exclusiveGateway id="fixStatusExclusiveGatewayMerge" name="Merge">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-59257145-0451-4180-A501-1D25C68789E9]]></modeler:editor-resource-id>
+      </extensionElements>
+    </exclusiveGateway>
+    <sequenceFlow id="sid-8B229952-EEDD-4B16-9515-44618F5DC23C" sourceRef="setStatusInactive" targetRef="fixStatusExclusiveGatewayMerge">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-8B229952-EEDD-4B16-9515-44618F5DC23C]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <userTask id="approveCampaign" name="Approve Campaign" activiti:candidateGroups="hr">
+      <extensionElements>
+        <modeler:allow-send-email><![CDATA[true]]></modeler:allow-send-email>
+        <modeler:activiti-idm-initiator><![CDATA[true]]></modeler:activiti-idm-initiator>
+        <modeler:editor-resource-id><![CDATA[sid-F7DAAAD6-0433-49AB-A43D-49F81B887BED]]></modeler:editor-resource-id>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-5043FF8F-7D08-4792-BF94-BCD7D028CD87" sourceRef="fixStatusExclusiveGatewayMerge" targetRef="approveCampaign">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-5043FF8F-7D08-4792-BF94-BCD7D028CD87]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <exclusiveGateway id="approveExclusiveGateway" name="Approved?" default="sid-AB2B9A9D-32CB-46F4-B612-48FE13029D2D">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-7D9204CE-27E1-4FE3-8632-A6F2682D2C0C]]></modeler:editor-resource-id>
+      </extensionElements>
+    </exclusiveGateway>
+    <sequenceFlow id="sid-6AAAFE17-35E8-4627-B809-41CBE339F349" sourceRef="approveCampaign" targetRef="approveExclusiveGateway">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-6AAAFE17-35E8-4627-B809-41CBE339F349]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="sid-7A16ACE9-E370-477B-8080-DD414797A2F0" sourceRef="setStatusInProgress" targetRef="approvedEnd">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-7A16ACE9-E370-477B-8080-DD414797A2F0]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <endEvent id="approvedEnd" name="Approved and Started">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-F147D19E-6C03-41F7-89DC-E5954A798F31]]></modeler:editor-resource-id>
+      </extensionElements>
+    </endEvent>
+    <endEvent id="rejectedEnd" name="Rejected">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-F2F4EC5B-CA01-4874-B6EB-D83730A6FAC8]]></modeler:editor-resource-id>
+      </extensionElements>
+    </endEvent>
+    <sequenceFlow id="sid-75379692-2205-4D64-B5F7-8E1D9D153628" sourceRef="setStatusAborted" targetRef="rejectedEnd">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-75379692-2205-4D64-B5F7-8E1D9D153628]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <serviceTask id="setStatusAborted" name="Set Campaign Inactive and Set Status Aborted" implementation="Set Campaign Inactive and Set Status Aborted">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-A72CA4AB-0FD5-4F61-80F3-65E2588BE158]]></modeler:editor-resource-id>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="setStatusPlanned" name="Update Campaign and Set Status Planned" implementation="Update Campaign and Set Status Planned">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-284CFA9A-D8FE-4EBB-99F6-217AD3A5CACA]]></modeler:editor-resource-id>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-57A4EF9E-D58D-4CEF-9D8C-AE419462C930" sourceRef="setStatusPlanned" targetRef="sid-2846E646-5418-4853-8ADC-31D6F74F30D8">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-57A4EF9E-D58D-4CEF-9D8C-AE419462C930]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="sid-61849CFF-FD1A-4324-AB3A-4634131679D7" sourceRef="sid-2846E646-5418-4853-8ADC-31D6F74F30D8" targetRef="setStatusInProgress">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-61849CFF-FD1A-4324-AB3A-4634131679D7]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <intermediateCatchEvent id="sid-2846E646-5418-4853-8ADC-31D6F74F30D8">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-2846E646-5418-4853-8ADC-31D6F74F30D8]]></modeler:editor-resource-id>
+      </extensionElements>
+      <timerEventDefinition>
+        <timeDate>${StartDate}</timeDate>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <serviceTask id="setStatusInProgress" name="Set Campaign Status In-Progress" implementation="Set Campaign Status In-Progress">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-A4428CF4-283C-481E-8AF5-16751CC3ED83]]></modeler:editor-resource-id>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-946576BF-DDF6-4BA4-81E3-FC8FCE6F012F" name="No" sourceRef="fixStatusExclusiveGateway" targetRef="fixStatusExclusiveGatewayMerge">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-946576BF-DDF6-4BA4-81E3-FC8FCE6F012F]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="sid-8BD0F0E2-9FCE-41DB-B011-AB58704A938C" name="Yes" sourceRef="fixStatusExclusiveGateway" targetRef="setStatusInactive">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-8BD0F0E2-9FCE-41DB-B011-AB58704A938C]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${Status != null || IsActive == true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-8E12C71D-EA1A-4AF6-8A0C-A4F91D67D1A3" name="No" sourceRef="approveExclusiveGateway" targetRef="setStatusAborted">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-8E12C71D-EA1A-4AF6-8A0C-A4F91D67D1A3]]></modeler:editor-resource-id>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved==false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-AB2B9A9D-32CB-46F4-B612-48FE13029D2D" name="Yes" sourceRef="approveExclusiveGateway" targetRef="setStatusPlanned">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-AB2B9A9D-32CB-46F4-B612-48FE13029D2D]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_campaignApproval">
+    <bpmndi:BPMNPlane bpmnElement="campaignApproval" id="BPMNPlane_campaignApproval">
+      <bpmndi:BPMNShape bpmnElement="Start" id="BPMNShape_Start">
+        <omgdc:Bounds height="30.0" width="29.999999999999993" x="45.00000000000001" y="210.00000000000014"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="fixStatusExclusiveGateway" id="BPMNShape_fixStatusExclusiveGateway">
+        <omgdc:Bounds height="40.0" width="40.0" x="155.0" y="205.00000000000006"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="setStatusInactive" id="BPMNShape_setStatusInactive">
+        <omgdc:Bounds height="80.0" width="99.99999999999997" x="210.00000000000003" y="60.00000000000001"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="fixStatusExclusiveGatewayMerge" id="BPMNShape_fixStatusExclusiveGatewayMerge">
+        <omgdc:Bounds height="40.0" width="40.0" x="345.00000000000006" y="205.0000000000001"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveCampaign" id="BPMNShape_approveCampaign">
+        <omgdc:Bounds height="80.0" width="99.99999999999994" x="435.00000000000006" y="185.00000000000006"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveExclusiveGateway" id="BPMNShape_approveExclusiveGateway">
+        <omgdc:Bounds height="40.0" width="40.0" x="585.0000000000002" y="205.00000000000006"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approvedEnd" id="BPMNShape_approvedEnd">
+        <omgdc:Bounds height="28.0" width="28.0" x="1065.0000000000002" y="211.00000000000003"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rejectedEnd" id="BPMNShape_rejectedEnd">
+        <omgdc:Bounds height="28.0" width="28.0" x="840.0000000000001" y="86.00000000000001"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="setStatusAborted" id="BPMNShape_setStatusAborted">
+        <omgdc:Bounds height="80.0" width="100.0" x="690.0000000000001" y="60.00000000000001"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="setStatusPlanned" id="BPMNShape_setStatusPlanned">
+        <omgdc:Bounds height="79.99999999999997" width="100.0" x="690.0000000000001" y="185.00000000000003"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-2846E646-5418-4853-8ADC-31D6F74F30D8" id="BPMNShape_sid-2846E646-5418-4853-8ADC-31D6F74F30D8">
+        <omgdc:Bounds height="31.0" width="31.0" x="825.0000000000001" y="209.50000000000017"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="setStatusInProgress" id="BPMNShape_setStatusInProgress">
+        <omgdc:Bounds height="80.00000000000003" width="100.0" x="900.0000000000001" y="185.00000000000009"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-5043FF8F-7D08-4792-BF94-BCD7D028CD87" id="BPMNEdge_sid-5043FF8F-7D08-4792-BF94-BCD7D028CD87">
+        <omgdi:waypoint x="384.5798319327732" y="225.420168067227"/>
+        <omgdi:waypoint x="435.00000000000006" y="225.2092050209206"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-AB2B9A9D-32CB-46F4-B612-48FE13029D2D" id="BPMNEdge_sid-AB2B9A9D-32CB-46F4-B612-48FE13029D2D">
+        <omgdi:waypoint x="624.5000000000002" y="225.50000000000006"/>
+        <omgdi:waypoint x="690.0000000000001" y="225.50000000000006"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-75379692-2205-4D64-B5F7-8E1D9D153628" id="BPMNEdge_sid-75379692-2205-4D64-B5F7-8E1D9D153628">
+        <omgdi:waypoint x="790.0000000000001" y="100.0"/>
+        <omgdi:waypoint x="840.0000000000001" y="100.00000000000001"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-7A16ACE9-E370-477B-8080-DD414797A2F0" id="BPMNEdge_sid-7A16ACE9-E370-477B-8080-DD414797A2F0">
+        <omgdi:waypoint x="1000.0000000000001" y="225.00000000000006"/>
+        <omgdi:waypoint x="1065.0000000000002" y="225.00000000000003"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-6AAAFE17-35E8-4627-B809-41CBE339F349" id="BPMNEdge_sid-6AAAFE17-35E8-4627-B809-41CBE339F349">
+        <omgdi:waypoint x="535.0" y="225.2074688796681"/>
+        <omgdi:waypoint x="585.4166666666669" y="225.4166666666667"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-655703DF-7CC5-4647-8502-81B220648224" id="BPMNEdge_sid-655703DF-7CC5-4647-8502-81B220648224">
+        <omgdi:waypoint x="74.99985944988686" y="225.06493445649315"/>
+        <omgdi:waypoint x="155.41304347826087" y="225.41304347826093"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-57A4EF9E-D58D-4CEF-9D8C-AE419462C930" id="BPMNEdge_sid-57A4EF9E-D58D-4CEF-9D8C-AE419462C930">
+        <omgdi:waypoint x="790.0000000000001" y="225.00000000000009"/>
+        <omgdi:waypoint x="825.0000000000001" y="225.00000000000014"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-946576BF-DDF6-4BA4-81E3-FC8FCE6F012F" id="BPMNEdge_sid-946576BF-DDF6-4BA4-81E3-FC8FCE6F012F">
+        <omgdi:waypoint x="194.55026455026456" y="225.4497354497355"/>
+        <omgdi:waypoint x="345.0526315789474" y="225.05263157894748"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8E12C71D-EA1A-4AF6-8A0C-A4F91D67D1A3" id="BPMNEdge_sid-8E12C71D-EA1A-4AF6-8A0C-A4F91D67D1A3">
+        <omgdi:waypoint x="605.5000000000002" y="205.50000000000006"/>
+        <omgdi:waypoint x="605.5000000000002" y="100.0"/>
+        <omgdi:waypoint x="690.0000000000001" y="100.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8B229952-EEDD-4B16-9515-44618F5DC23C" id="BPMNEdge_sid-8B229952-EEDD-4B16-9515-44618F5DC23C">
+        <omgdi:waypoint x="310.0" y="100.0"/>
+        <omgdi:waypoint x="365.50000000000006" y="100.0"/>
+        <omgdi:waypoint x="365.50000000000006" y="205.5000000000001"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-61849CFF-FD1A-4324-AB3A-4634131679D7" id="BPMNEdge_sid-61849CFF-FD1A-4324-AB3A-4634131679D7">
+        <omgdi:waypoint x="856.999831666658" y="225.4266062767586"/>
+        <omgdi:waypoint x="900.0000000000001" y="225.22935779816527"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8BD0F0E2-9FCE-41DB-B011-AB58704A938C" id="BPMNEdge_sid-8BD0F0E2-9FCE-41DB-B011-AB58704A938C">
+        <omgdi:waypoint x="175.5" y="205.50000000000006"/>
+        <omgdi:waypoint x="175.5" y="100.0"/>
+        <omgdi:waypoint x="210.00000000000003" y="100.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
