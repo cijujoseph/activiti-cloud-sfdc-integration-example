@@ -30,3 +30,6 @@ insert pushTopic;
 
 When you have all the micro-services running, your fancy Kubernetes dashboard will look like this!!
 ![Kube Dashboard](kube-dashboard.png)
+
+
+For more details on Activiti 7 & Activiti Cloud, check out [activiti-7-developers-guide](https://activiti.gitbooks.io/activiti-7-developers-guide/content/introduction.html)
