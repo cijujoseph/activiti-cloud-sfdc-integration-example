@@ -11,3 +11,19 @@
 
 ## Click the below link to watch a demo of this project
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=TKxS92CVkzE" target="_blank"><img src="https://img.youtube.com/vi/TKxS92CVkzE/0.jpg" alt="Click here to watch a demo of this project" width="240" height="180" border="10" /></a>
+
+#### README to be updated soon with complete instructions! If you can't wait, the key thing is to have a Salesforce Account, populate the SFDC connection properties in kubernetes/application.yml and creation of a PushTopic
+
+```
+Open Developer Console -> Go to Debug > Execute Anonymous:
+
+PushTopic pushTopic = new PushTopic();
+pushTopic.Name = 'NewCampaignNotification';
+pushTopic.Query = 'SELECT ActualCost,BudgetedCost,CampaignMemberRecordTypeId,CreatedDate,EndDate,ExpectedResponse,ExpectedRevenue,Id,IsActive,NumberOfContacts,StartDate,Status,Type FROM Campaign';
+pushTopic.ApiVersion = 41.0;
+pushTopic.NotifyForOperationCreate = true;
+pushTopic.NotifyForOperationUpdate = false;
+pushTopic.NotifyForOperationUndelete = false;
+pushTopic.NotifyForOperationDelete = false;
+insert pushTopic;
+```
