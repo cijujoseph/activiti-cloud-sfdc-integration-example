@@ -1,0 +1,296 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Key Solution Testing APIs",
+		"_postman_id": "a269dacd-f6bc-de4b-8a78-5476d3b1a0c9",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Access Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var tokens=JSON.parse(responseBody); ",
+							"postman.setGlobalVariable(\"kcAccessToken\", tokens.access_token); "
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "activiti",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "hruser",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://activiti-cloud-sso-idm-kub:30081/auth/realms/springboot/protocol/openid-connect/token",
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Check Application Routes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "http://activiti-cloud-sso-idm-kub:30080/application/routes",
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Process Definitions",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "http://activiti-cloud-sso-idm-kub:30080/activiti-runtime-bundle-campaign-management/v1/process-definitions",
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Set Process Definition Id in Event Listener",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "campaignApproval:1:3"
+				},
+				"url": "http://activiti-cloud-sso-idm-kub:30080/activiti-cloud-connector-sfdc-event-listener/process-id",
+				"description": "A workaround to set process definition id which will be known only after RB startup"
+			},
+			"response": []
+		},
+		{
+			"name": "Check Process Definition Id set in Event Listener",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "campaignApproval:1:3"
+				},
+				"url": "http://activiti-cloud-sso-idm-kub:30080/activiti-cloud-connector-sfdc-event-listener/process-id",
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tasks",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://activiti-cloud-sso-idm-kub:30080/activiti-runtime-bundle-campaign-management/v1/tasks?page=0&size=10",
+					"protocol": "http",
+					"host": [
+						"activiti-cloud-sso-idm-kub"
+					],
+					"port": "30080",
+					"path": [
+						"activiti-runtime-bundle-campaign-management",
+						"v1",
+						"tasks"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0",
+							"equals": true
+						},
+						{
+							"key": "size",
+							"value": "10",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Claim Task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://activiti-cloud-sso-idm-kub:30080/activiti-runtime-bundle-campaign-management/v1/tasks/2566/claim?assignee=hruser",
+					"protocol": "http",
+					"host": [
+						"activiti-cloud-sso-idm-kub"
+					],
+					"port": "30080",
+					"path": [
+						"activiti-runtime-bundle-campaign-management",
+						"v1",
+						"tasks",
+						"2566",
+						"claim"
+					],
+					"query": [
+						{
+							"key": "assignee",
+							"value": "hruser",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Approve Task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"outputVariables\": {\n\t\t\"approved\": \"true\",\n\t\t\"StartDate\":\"2017-12-12T00:00:00.000Z\",\n\t\t\"EndDate\":\"2017-12-12T00:00:00.000Z\",\n\t\t\"ExpectedResponse\":\"100.0\",\n\t\t\"BudgetedCost\":\"750.0\",\n\t\t\"ActualCost\":\"500.0\",\n\t\t\"ExpectedRevenue\":\"100.0\"\n\t},\n\t\"commandType\": \"CompleteTaskCmd\"\n}"
+				},
+				"url": "http://activiti-cloud-sso-idm-kub:30080/activiti-runtime-bundle-campaign-management/v1/tasks/2518/complete",
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Running Instances",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					}
+				],
+				"body": {},
+				"url": "http://activiti-cloud-sso-idm-kub:30080/activiti-runtime-bundle-campaign-management/v1/process-instances",
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Reject Task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{kcAccessToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"outputVariables\": {\n\t\t\"approved\": \"false\"\n\t},\n\t\"commandType\": \"CompleteTaskCmd\"\n}"
+				},
+				"url": "http://activiti-cloud-sso-idm-kub:30080/activiti-runtime-bundle-campaign-management/v1/tasks/2566/complete",
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
