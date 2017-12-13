@@ -27,3 +27,6 @@ pushTopic.NotifyForOperationUndelete = false;
 pushTopic.NotifyForOperationDelete = false;
 insert pushTopic;
 ```
+
+When you have all the micro-services running, your fancy Kubernetes dashboard will look like this!!
+![Kube Dashboard](kube-dashboard.png)
