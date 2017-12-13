@@ -4,7 +4,7 @@
 
   <parent>
     <groupId>org.activiti.cloud.examples</groupId>
-    <artifactId>sfdc-example</artifactId>
+    <artifactId>activiti-cloud-sfdc-integration-example</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
