@@ -2,6 +2,7 @@ package org.activiti.cloud.connectors.sfdc;
 
 import javax.websocket.server.PathParam;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProcessMappingsController {
 
-    // Set Process Id
+    // Process Def Id, a hack until start by key is supported
+	@Value("${activiti.defaultProcessDefId}")
     private static String processId;
 
     public static String getProcessId() {

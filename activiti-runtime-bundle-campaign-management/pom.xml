@@ -17,7 +17,6 @@
     <postgres.version>9.4.1212.jre7</postgres.version>
   </properties>
 
-
   <dependencies>
     <dependency>
       <groupId>org.activiti.cloud</groupId>

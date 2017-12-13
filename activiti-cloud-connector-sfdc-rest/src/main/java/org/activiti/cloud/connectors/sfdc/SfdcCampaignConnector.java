@@ -77,6 +77,12 @@ public class SfdcCampaignConnector {
 		Map<String, Object> campaignUpdateRequest = new HashMap<String, Object>();
 		campaignUpdateRequest.put("Status", "Planned");
 		campaignUpdateRequest.put("IsActive", true);
+		campaignUpdateRequest.put("StartDate", variables.get("StartDate"));
+		campaignUpdateRequest.put("EndDate", variables.get("EndDate"));
+		campaignUpdateRequest.put("ExpectedRevenue", variables.get("ExpectedRevenue"));
+		campaignUpdateRequest.put("BudgetedCost", variables.get("BudgetedCost"));
+		campaignUpdateRequest.put("ActualCost", variables.get("ActualCost"));
+		campaignUpdateRequest.put("ExpectedResponse", variables.get("ExpectedResponse"));
 
 		try {
 			sfdcRestClient.updateCampaign(campaignUpdateRequest, (String) variables.get("Id"));
