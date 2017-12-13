@@ -13,20 +13,20 @@ public class ProcessMappingsController {
 
     // Process Def Id, a hack until start by key is supported
 	@Value("${activiti.defaultProcessDefId}")
-    private static String processId;
+    private String processId;
 
-    public static String getProcessId() {
-		return processId;
+    public String getProcessId() {
+		return this.processId;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/process-id")
     public String getProcessId(@PathParam("processKey") String processKey) {
-        return processId;
+        return this.processId;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/process-id")
     public void setProcessId(@RequestBody String processDefId) {
-    	processId = processDefId;
+    	this.processId = processDefId;
     }
 
 }
